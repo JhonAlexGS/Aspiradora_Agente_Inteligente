@@ -2,12 +2,13 @@ import numpy as np
 
 class Aspiradora():
 
-    def __init__(self, laberinto) -> None:
-        self.recorrido = [[],[]]
+    def __init__(self, laberinto, guardar_posicion) -> None:
+        
         self.laberinto = laberinto
+        self.guardar_posicion_interfaz = guardar_posicion
 
 
-    def mover_texto(self, canvas, text_id, y_cleaner, x_cleaner, tamaño_casilla, lista_suciedades,delay=200):
+    def mover_aspiradora(self, canvas, text_id, y_cleaner, x_cleaner, tamaño_casilla, lista_suciedades,delay=200):
 
         while(True):
 
@@ -51,6 +52,8 @@ class Aspiradora():
                     elif ramdon_direction == 4:
                         x_cleaner-=1
                     break
+                else:
+                    self.guardar_posicion_interfaz(canvas, tamaño_casilla, x, y, 0)
 
 
         x = int(x_cleaner * tamaño_casilla + tamaño_casilla / 2)
@@ -64,21 +67,9 @@ class Aspiradora():
             lista_suciedades[0].pop(index)
             lista_suciedades[1].pop(index)
 
-        # print(self.recorrido)
-        self.guardar_posicion(canvas, tamaño_casilla, x_cleaner, y_cleaner)
+        self.guardar_posicion_interfaz(canvas, tamaño_casilla, x_cleaner, y_cleaner, 1)
 
-        # Mover el texto a la nueva posición
         canvas.tag_raise(text_id)
         canvas.coords(text_id, x, y)
 
-        canvas.after(delay, self.mover_texto, canvas, text_id, y_cleaner, x_cleaner, tamaño_casilla, lista_suciedades)
-        
-
-
-    def guardar_posicion(self, canvas, tamaño_casilla, x, y):
-        self.recorrido[0].append((x,y))
-        cuadrado = canvas.create_rectangle(
-            tamaño_casilla*x, tamaño_casilla*y, (tamaño_casilla*x)+tamaño_casilla, (tamaño_casilla*y)+tamaño_casilla, 
-            fill="orange", outline="black")
-        self.recorrido[1].append(cuadrado)
-        
+        canvas.after(delay, self.mover_aspiradora, canvas, text_id, y_cleaner, x_cleaner, tamaño_casilla, lista_suciedades)

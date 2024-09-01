@@ -1,8 +1,51 @@
-from play import main
-import time
+import tkinter as tk
+from Vista import ventana, suciedad
+from Agente import agente
 
-print("Jjejeje")
+if __name__ == "__main__":
+    # Crear la ventana principal
+    root = tk.Tk()
+    root.title("Agente Aspiradora")
 
-main.ejecutar()
+    n_columas = 10
+    n_filas = 10
+    tamaño_casilla = 60
 
-print("Hola")
+    interfaz = ventana.Intefaz()
+
+    # Crear un Frame principal para el tablero
+    frame = tk.Frame(root)
+    frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+    interfaz.crear_botones(frame)
+
+    # Crear el tablero de ajedrez
+    canvas = interfaz.crear_tablero(frame, filas=n_filas, columnas=n_columas, tamaño_casilla=tamaño_casilla)
+
+    aspiradora = canvas.create_text(
+        tamaño_casilla / 2, tamaño_casilla / 2, text="🧿", font=('Arial', 32), fill='red'
+        )
+
+    susi = suciedad.suciedad(filas=n_filas, columnas=n_columas, laberinto=interfaz.laberinto)
+
+    lista_suciedades = [[],[]]
+
+    for suciedades in susi.list_suciedad:
+
+        x = int(suciedades[1] * tamaño_casilla + tamaño_casilla / 2)
+        y = int(suciedades[0] * tamaño_casilla + tamaño_casilla / 2)
+            
+        canvas_suciedades = canvas.create_text(x, y, text="💩", font=('Arial', 32), fill='brown')
+        lista_suciedades[0].append((x,y))
+        lista_suciedades[1].append(canvas_suciedades)
+
+    agente_aspiradora = agente.Aspiradora(laberinto=interfaz.laberinto, guardar_posicion=interfaz.guardar_posicion)
+
+    # Mover el texto a través del tablero
+    agente_aspiradora.mover_aspiradora(canvas, aspiradora, y_cleaner=1, x_cleaner=1, tamaño_casilla=tamaño_casilla, lista_suciedades=lista_suciedades)
+
+    # Ajustar el tamaño de la ventana al contenido
+    root.update_idletasks()
+    interfaz.centrar_ventana(root)
+
+    # Ejecutar el bucle principal de Tkinter
+    root.mainloop()
