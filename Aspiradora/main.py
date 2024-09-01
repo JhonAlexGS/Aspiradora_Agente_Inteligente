@@ -4,10 +4,10 @@ from Vista import ventana, agente, suciedad
 if __name__ == "__main__":
     # Crear la ventana principal
     root = tk.Tk()
-    root.title("Tablero de Ajedrez con Texto en Movimiento")
+    root.title("Agente Aspiradora")
 
-    n_columas = 8
-    n_filas = 8
+    n_columas = 10
+    n_filas = 10
     tamaño_casilla = 60
 
     # Crear un Frame principal para el tablero
@@ -22,7 +22,7 @@ if __name__ == "__main__":
         tamaño_casilla / 2, tamaño_casilla / 2, text="🧿", font=('Arial', 32), fill='red'
         )
 
-    susi = suciedad.suciedad(filas=n_filas, columnas=n_columas)
+    susi = suciedad.suciedad(filas=n_filas, columnas=n_columas, laberinto=ventana.laberinto)
 
     lista_suciedades = [[],[]]
 
@@ -30,15 +30,15 @@ if __name__ == "__main__":
 
         x = int(suciedades[1] * tamaño_casilla + tamaño_casilla / 2)
         y = int(suciedades[0] * tamaño_casilla + tamaño_casilla / 2)
-
+            
         canvas_suciedades = canvas.create_text(x, y, text="💩", font=('Arial', 32), fill='brown')
         lista_suciedades[0].append((x,y))
         lista_suciedades[1].append(canvas_suciedades)
 
-    agente_aspiradora = agente.Aspiradora()
+    agente_aspiradora = agente.Aspiradora(ventana.laberinto)
 
     # Mover el texto a través del tablero
-    agente_aspiradora.mover_texto(canvas, aspiradora, fila=0, columna=0, tamaño_casilla=tamaño_casilla, lista_suciedades=lista_suciedades)
+    agente_aspiradora.mover_texto(canvas, aspiradora, y_cleaner=1, x_cleaner=1, tamaño_casilla=tamaño_casilla, lista_suciedades=lista_suciedades)
 
     # Ajustar el tamaño de la ventana al contenido
     root.update_idletasks()

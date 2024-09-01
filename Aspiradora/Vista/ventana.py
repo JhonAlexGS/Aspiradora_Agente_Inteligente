@@ -1,5 +1,19 @@
 import tkinter as tk
 
+laberinto = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 1, 0, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 0, 1, 1, 1, 1, 0, 1, 0],
+    [0, 1, 0, 1, 1, 1, 1, 0, 1, 0],
+    [0, 1, 0, 1, 1, 1, 1, 0, 1, 0],
+    [0, 1, 0, 0, 1, 0, 0, 0, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+]
+
+
 def centrar_ventana(ventana):
 
     # Obtener el tamaño de la pantalla
@@ -28,10 +42,12 @@ def crear_tablero(frame, filas = 8, columnas = 0, tamaño_casilla = 60):
     for fila in range(filas):
         for columna in range(columnas):
             # Alternar colores entre blanco y negro
-            color = 'white' if (fila + columna) % 2 == 0 else 'white'
+            
+            color = 'white' if laberinto[fila][columna] == 1 else 'black'
+            
             x1 = columna * tamaño_casilla
             y1 = fila * tamaño_casilla
-            x2 = x1 + tamaño_casilla
+            x2 = x1 + tamaño_casilla 
             y2 = y1 + tamaño_casilla
             canvas.create_rectangle(x1, y1, x2, y2, fill=color)
     
