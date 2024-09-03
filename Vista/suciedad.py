@@ -4,10 +4,9 @@ class suciedad():
 
     def __init__(self, filas, columnas, laberinto) -> None:
 
-        icon_suciedad = "💩"
         self.list_suciedad = []
-        # Generando la cantidad de basuras
 
+        # Generando la cantidad de basuras
         a, b = 1, 5
         numero_aleatorio = int(np.random.uniform(a, b))
         
