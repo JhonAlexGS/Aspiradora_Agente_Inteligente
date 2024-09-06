@@ -5,28 +5,28 @@ class Aspiradora():
 
     def __init__(self, laberinto, guardar_posicion) -> None:
         
+        self.start = True
         self.laberinto = laberinto
         self.guardar_posicion_interfaz = guardar_posicion # Metodo usado para imprimir
         self.lista_Casillas = []
         self.lista_Casillas.append(Casilla.Nodo((1, 1)))
         
 
-    def mover_aspiradora(self, canvas, text_id, y_cleaner=None, x_cleaner=None, tamaño_casilla=None, lista_suciedades=None, nodoAnterior= None, delay=1000):
-
-        if y_cleaner == None and x_cleaner == None:
-            print("jejje")
-            # print()
-            x_cleaner = self.lista_Casillas[0].id_Casilla[0]
-            y_cleaner = self.lista_Casillas[0].id_Casilla[1]
-            x = int(x_cleaner * tamaño_casilla + tamaño_casilla / 2)
-            y = int(y_cleaner * tamaño_casilla + tamaño_casilla / 2)
+    def mover_aspiradora(self, canvas, text_id, y_cleaner=None, x_cleaner=None, tamaño_casilla=None, lista_suciedades=None, nodoAnterior= None, delay=2000):
 
         casilla_Nodo = Casilla.Nodo((x_cleaner,y_cleaner))
         direction = None
 
-        print(self.lista_Casillas)
+        if self.start==True:
+            self.start=False
+            x_cleaner = self.lista_Casillas[0].id_Casilla[0]
+            y_cleaner = self.lista_Casillas[0].id_Casilla[1]
+            x = int(x_cleaner * tamaño_casilla + tamaño_casilla / 2)
+            y = int(y_cleaner * tamaño_casilla + tamaño_casilla / 2)
+            canvas.coords(text_id, x, y)
 
-        if self.lista_Casillas != 1:
+
+        else:           
 
             while(True):
 
@@ -72,6 +72,7 @@ class Aspiradora():
                     else:
                         casilla_Nodo.camino[direction-1] = 0
                         self.guardar_posicion_interfaz(canvas, tamaño_casilla, x, y, 0)
+                        
 
             x = int(x_cleaner * tamaño_casilla + tamaño_casilla / 2)
             y = int(y_cleaner * tamaño_casilla + tamaño_casilla / 2)
@@ -119,13 +120,22 @@ class Aspiradora():
                                 posicion_Lista_Anterior_Actual.append(anterior_actual.id_Casilla)
                                 break
                         index_casilla+=1
-            
-            print(posicion_Lista_Anterior_Actual)
-
+        
             #################################################################################################
+            # Enlazar Nodo
+            # print((x_cleaner,y_cleaner))
+            # print(self.lista_Casillas)
 
-            # Supero poner
+            # Super poner
             canvas.tag_raise(text_id)
             canvas.coords(text_id, x, y)
 
         canvas.after(delay, self.mover_aspiradora, canvas, text_id, y_cleaner, x_cleaner, tamaño_casilla, lista_suciedades, casilla_Nodo)        
+
+    def obtener_posicion(self, coordenadas):
+        index = 0
+        for casillas in self.lista_Casillas:
+            if casillas.id_Casilla == coordenadas:
+                return index
+            index+=1
+        return None
