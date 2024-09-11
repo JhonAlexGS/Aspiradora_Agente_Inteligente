@@ -5,8 +5,8 @@ class Nodo:
         
         self.id_Casilla = id_Casilla # El identificador es la posición del elementos
         self.camino = [
-            None, # Arriba
             None, # Abajo
+            None, # Arriba
             None, # Derecha
             None  # Izquierda
             ]
