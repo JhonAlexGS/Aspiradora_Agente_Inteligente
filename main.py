@@ -8,7 +8,7 @@ if __name__ == "__main__":
     root.title("agenteInteligente Aspiradora")
 
     n_columas = 10
-    n_filas = 10
+    n_filas = 5
     tamaño_casilla = 40
     posicion_origin = (1,1)
 

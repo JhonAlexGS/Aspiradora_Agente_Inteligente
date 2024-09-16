@@ -2,18 +2,20 @@ import tkinter as tk
 
 class Intefaz:
 
-    laberinto = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-        [0, 1, 0, 0, 1, 0, 0, 0, 1, 0],
-        [0, 1, 0, 1, 1, 1, 1, 1, 1, 0],
-        [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-        [0, 1, 0, 1, 1, 1, 1, 0, 1, 0],
-        [0, 1, 0, 1, 1, 1, 1, 0, 1, 0],
-        [0, 1, 0, 1, 1, 0, 0, 0, 1, 0],
-        [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ]
+    # laberinto = [
+    #     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #     [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    #     [0, 1, 0, 0, 1, 0, 0, 0, 1, 0],
+    #     [0, 1, 0, 1, 1, 1, 1, 1, 1, 0],
+    #     [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    #     [0, 1, 0, 1, 1, 1, 1, 0, 1, 0],
+    #     [0, 1, 0, 1, 1, 1, 1, 0, 1, 0],
+    #     [0, 1, 0, 1, 1, 0, 0, 0, 1, 0],
+    #     [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    #     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # ]
+
+    laberinto = []
 
     def __init__(self):
 
@@ -46,7 +48,15 @@ class Intefaz:
 
     def crear_tablero(self, frame, filas = 8, columnas = 0, tamaño_casilla = 60):
 
-        
+        # Crear dimensiones del tablero
+        for fila in range(filas):
+            newlist = []
+            for columna in range(columnas):
+                casillita=1
+                if (fila == 0 or columna == 0 or fila==(filas-1) or columna==(columnas-1)):
+                    casillita=0
+                newlist.append(casillita)
+            self.laberinto.append(newlist)
 
         # Crear el lienzo para dibujar el tablero
         canvas = tk.Canvas(frame, width=columnas * tamaño_casilla, height=filas * tamaño_casilla)
