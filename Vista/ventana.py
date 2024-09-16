@@ -5,12 +5,12 @@ class Intefaz:
     laberinto = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-        [0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+        [0, 1, 0, 0, 1, 0, 0, 0, 1, 0],
         [0, 1, 0, 1, 1, 1, 1, 1, 1, 0],
-        [0, 1, 0, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
         [0, 1, 0, 1, 1, 1, 1, 0, 1, 0],
         [0, 1, 0, 1, 1, 1, 1, 0, 1, 0],
-        [0, 1, 0, 1, 0, 0, 0, 0, 1, 0],
+        [0, 1, 0, 1, 1, 0, 0, 0, 1, 0],
         [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
@@ -23,6 +23,8 @@ class Intefaz:
             [], # Coordenadas
             [], # Elemento Canvas
             []] # Tipo de casilla (Bloque (0) o paso libre (1))
+        # self.label = None
+        # self.energia = 1000
 
     def centrar_ventana(self, ventana):
 
@@ -43,6 +45,8 @@ class Intefaz:
         ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
 
     def crear_tablero(self, frame, filas = 8, columnas = 0, tamaño_casilla = 60):
+
+        
 
         # Crear el lienzo para dibujar el tablero
         canvas = tk.Canvas(frame, width=columnas * tamaño_casilla, height=filas * tamaño_casilla)
@@ -78,3 +82,16 @@ class Intefaz:
         # Crear un botón
         boton = tk.Button(frame, text="Presiona Aquí", command=lambda: print("¡Botón presionado!"))
         boton.pack(pady=10)
+
+
+    def crear_energia(self, frame):
+        label = tk.Label(frame, text="Segundos: 0", font=("Arial", 16))
+        label.pack()
+        return label
+
+    #Creación por defecto
+    def crear_fila(self, frame, tamaño_casilla):
+        for i in range(int(tamaño_casilla*1.68)):
+            label = tk.Label(frame, bg="green", width=0)
+            label.grid(row=0, column=i, padx=0, pady=1)
+        return frame

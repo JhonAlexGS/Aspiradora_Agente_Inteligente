@@ -1,59 +1,104 @@
 from Nodo import Casilla
 from Agente.helper import neighbor_empty
 import numpy as np
+import random
 
 class Aspiradora():
 
-    def __init__(self, laberinto, guardar_posicion, tamaño_casilla) -> None:
+    def __init__(self, laberinto, guardar_posicion, tamaño_casilla,energia_label, posicion_origin=(1,1)) -> None:
         
         self.start = True
         self.laberinto = laberinto
         self.guardar_posicion_interfaz = guardar_posicion # Metodo usado para imprimir
         self.lista_Casillas = []
-        self.lista_Casillas.append(Casilla.Nodo((4, 4)))
+        self.lista_Casillas.append(Casilla.Nodo(posicion_origin))
         self.tamaño_casilla = tamaño_casilla
+        self.bug = []
+        self.origin=posicion_origin
+        self.return_Origin=False
+        self.energia_label=energia_label
+        self.energia=0
 
-    def mover_aspiradora(self, canvas, text_id, lista_suciedades=None, nodoAnterior= None, re_tour=[], delay=50):
+    def mover_aspiradora(self, canvas, text_id, lista_suciedades=None, nodoAnterior= None, re_tour=[], delay=100):
 
-        # for i in self.lista_Casillas:
-        #     print(str(i.id_Casilla) + " -> " + str(i.camino))
+        self.energia -= 1
+        # print(self.energia_label)
+        current_energi=10+(self.energia)
+        # dibujar=current_energi*'🧐'
+        self.energia_label.config(text=f"Energia: {current_energi}")
 
-        if self.start==True:
+        if current_energi!=0:
 
-            self.start=False
-            x_cleaner = self.lista_Casillas[0].id_Casilla[0]
-            y_cleaner = self.lista_Casillas[0].id_Casilla[1]
-            x = int(x_cleaner * self.tamaño_casilla + self.tamaño_casilla / 2)
-            y = int(y_cleaner * self.tamaño_casilla + self.tamaño_casilla / 2)
-            self.guardar_posicion_interfaz(canvas, self.tamaño_casilla, x_cleaner, y_cleaner, 1)
-            canvas.coords(text_id, x, y)
-            canvas.tag_raise(text_id)
-            canvas.after(delay, self.mover_aspiradora, canvas, text_id, lista_suciedades, self.lista_Casillas[0]) 
+            if self.start==True:
 
-        else: 
-
-            # self.imprimir_lista()
-            new_x, new_y, direction, re_tour= self.next_move(nodoAnterior, re_tour)
-            index = self.obtener_posicion((new_x,new_y))
-
-            if self.laberinto[new_y][new_x] == 1:
-                # Agregando nuevo nodo
-                if index == None:
-                    self.lista_Casillas.append(Casilla.Nodo((new_x,new_y)))
-                nuevo_Nodo = Casilla.Nodo((new_x,new_y))
-                self.link(nodoAnterior, nuevo_Nodo)
-                x_table = int(new_x * self.tamaño_casilla + self.tamaño_casilla / 2)
-                y_table = int(new_y * self.tamaño_casilla + self.tamaño_casilla / 2)
-                lista_suciedades = self.clean(canvas, x_table, y_table, lista_suciedades)
-                self.guardar_posicion_interfaz(canvas, self.tamaño_casilla, new_x, new_y, 1)
+                self.start=False
+                x_cleaner = self.lista_Casillas[0].id_Casilla[0]
+                y_cleaner = self.lista_Casillas[0].id_Casilla[1]
+                x = int(x_cleaner * self.tamaño_casilla + self.tamaño_casilla / 2)
+                y = int(y_cleaner * self.tamaño_casilla + self.tamaño_casilla / 2)
+                self.guardar_posicion_interfaz(canvas, self.tamaño_casilla, x_cleaner, y_cleaner, 1)
+                canvas.coords(text_id, x, y)
                 canvas.tag_raise(text_id)
-                canvas.coords(text_id, x_table, y_table)
-                canvas.after(delay, self.mover_aspiradora, canvas, text_id, lista_suciedades, nuevo_Nodo, re_tour) 
-            else:
-                index = self.obtener_posicion((nodoAnterior.id_Casilla[0],nodoAnterior.id_Casilla[1]))
-                self.lista_Casillas[index].camino[direction] = 0
-                self.guardar_posicion_interfaz(canvas, self.tamaño_casilla, new_x, new_y, 0)
-                canvas.after(delay, self.mover_aspiradora, canvas, text_id, lista_suciedades, nodoAnterior, re_tour) 
+                canvas.after(delay, self.mover_aspiradora, canvas, text_id, lista_suciedades, self.lista_Casillas[0]) 
+
+            else: 
+
+                ########################################################################################
+                # Resolviendo el bug de que solamente se quede en dos casillas
+
+                if len(self.bug) == 6:
+                    if (self.bug[0] == self.bug[2] and 
+                        self.bug[1] == self.bug[3] and 
+                        self.bug[4] == self.bug[5]):
+                        re_tour = [random.randint(0, 3) for _ in range(3)]
+                        print("...Reset..")
+                        self.bug = []
+                    else:
+                        self.bug = self.bug[1:] + [nodoAnterior.id_Casilla]
+                else:
+                    self.bug.append(nodoAnterior.id_Casilla)
+
+                ########################################################################################
+                # Aqui se intenta volver a la posicion inicial
+
+                if self.completed_tour():
+                    print("Completed Tour")
+                    print("Return Origin...")
+                    self.return_Origin = True
+                    new_x, new_y, direction, re_tour= self.next_move(nodoAnterior, re_tour, self.origin)
+                else:
+                ########################################################################################
+                # self.imprimir_lista()
+                    new_x, new_y, direction, re_tour= self.next_move(nodoAnterior, re_tour, None)
+
+                index = self.obtener_posicion((new_x,new_y))
+
+                if self.laberinto[new_y][new_x] == 1:
+
+                    # Agregando nuevo nodo y movimiento
+                    go = True
+                    if index == None:
+                        self.lista_Casillas.append(Casilla.Nodo((new_x,new_y)))
+                    nuevo_Nodo = Casilla.Nodo((new_x,new_y))
+                    self.link(nodoAnterior, nuevo_Nodo)
+                    x_table = int(new_x * self.tamaño_casilla + self.tamaño_casilla / 2)
+                    y_table = int(new_y * self.tamaño_casilla + self.tamaño_casilla / 2)
+                    lista_suciedades = self.clean(canvas, x_table, y_table, lista_suciedades)
+                    self.guardar_posicion_interfaz(canvas, self.tamaño_casilla, new_x, new_y, 1)
+                    canvas.tag_raise(text_id)
+                    canvas.coords(text_id, x_table, y_table)
+                    if self.return_Origin:
+                        if self.origin == (new_x, new_y):
+                            go = False
+                    if go:
+                        canvas.after(delay, self.mover_aspiradora, canvas, text_id, lista_suciedades, nuevo_Nodo, re_tour) 
+                else:
+                    # Para guardar el obstaculo
+                    index = self.obtener_posicion((nodoAnterior.id_Casilla[0],nodoAnterior.id_Casilla[1]))
+                    self.lista_Casillas[index].camino[direction] = 0
+                    self.guardar_posicion_interfaz(canvas, self.tamaño_casilla, new_x, new_y, 0)
+                    canvas.after(delay, self.mover_aspiradora, canvas, text_id, lista_suciedades, nodoAnterior, re_tour) 
+
 
     def imprimir_lista(self):
         print("")
@@ -77,21 +122,19 @@ class Aspiradora():
                 lista_suciedades[1].pop(index)
         return lista_suciedades
 
-    def next_move(self, casilla, mandatory_address=[]):
+    def next_move(self, casilla, mandatory_address=[], target_square=None):
 
         x_cleaner=casilla.id_Casilla[0]
         y_cleaner=casilla.id_Casilla[1]
 
         # mandatory_address = []
         if len(mandatory_address)==0:
-            neighbor_empty_near=self.search_empty((x_cleaner, y_cleaner))
+            neighbor_empty_near=self.search_empty((x_cleaner, y_cleaner), target_square)
             if neighbor_empty_near != False:
                 index_direction = np.random.randint(0, len(neighbor_empty_near))
                 direction=neighbor_empty_near[index_direction]
             else:
-                mandatory_address = self.new_tour_list(casilla)
-                # print(mandatory_address)
-                # direction=np.random.randint(0, 4)
+                mandatory_address = self.new_tour_list(casilla, target_square)
                 mandatory_address.pop(0)
                 direction=mandatory_address.pop(0)
         else:
@@ -154,20 +197,17 @@ class Aspiradora():
                 self.lista_Casillas[index_anterior].camino[3] = nodoActual.id_Casilla
                 self.lista_Casillas[index_actual].camino[2] = nodoAnterior.id_Casilla
 
-    def search_empty(self, nodo):
+    def search_empty(self, nodo, target):
         casilla = self.obtener_posicion(nodo)
-        return neighbor_empty(self.lista_Casillas[casilla].camino)
+        return neighbor_empty(self.lista_Casillas[casilla].camino, target)
+
     
-    def search_square(self, list_square, squares_traveled = [], memory_square = []):
+    def search_square(self, list_square, squares_traveled = [], memory_square = [], target_square=None):
         
         new_traveled= []
         new_list_square=[]
 
         repeat_method = True
-
-        # print("\n")
-        # for i in list_square:
-        #     print(i.id_Casilla)
 
         if len(list_square)==0:
             return squares_traveled
@@ -181,7 +221,7 @@ class Aspiradora():
             
                 for squa in square.camino:
                     
-                    if squa == None:
+                    if squa == target_square:
                         squares_traveled.append(new_traveled)
                         return squares_traveled
                     else:
@@ -197,19 +237,20 @@ class Aspiradora():
             squares_traveled.append(new_traveled)
 
         if repeat_method:
-            return self.search_square(list_square=new_list_square, squares_traveled=squares_traveled, memory_square=memory_square)
+            return self.search_square(list_square=new_list_square, squares_traveled=squares_traveled, 
+                memory_square=memory_square, target_square=target_square)
         else:
             return squares_traveled
 
-    def new_tour_list(self, casilla):
+    def new_tour_list(self, casilla, target_square=None):
 
         index=self.obtener_posicion(casilla.id_Casilla)
-        list_tour = self.search_square(list_square=[self.lista_Casillas[index]], squares_traveled=[], memory_square = [])
-        # print(list_tour)
+        list_tour = self.search_square(list_square=[self.lista_Casillas[index]], squares_traveled=[], 
+            memory_square = [], target_square=target_square)
         len_tour = len(list_tour)-1
         if len(list_tour)<=1:
             return [np.random.randint(0, 4)]
-        target=None
+        target=target_square
         re_tour = []
         for n_tour in range(len(list_tour)):
             for squar in list_tour[len_tour-n_tour]:
@@ -229,3 +270,9 @@ class Aspiradora():
                     break
         
         return re_tour
+    
+    def completed_tour(self):
+        for square in self.lista_Casillas:
+            if None in square.camino:
+                return False
+        return True
