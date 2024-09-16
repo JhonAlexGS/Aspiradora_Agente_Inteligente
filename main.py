@@ -7,9 +7,9 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.title("agenteInteligente Aspiradora")
 
-    n_columas = 10
-    n_filas = 5
-    tamaño_casilla = 40
+    n_columas = 20
+    n_filas = 20
+    tamaño_casilla = 20
     posicion_origin = (1,1)
 
     interfaz = ventana.Intefaz()

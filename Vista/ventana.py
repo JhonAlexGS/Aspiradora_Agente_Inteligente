@@ -1,4 +1,5 @@
 import tkinter as tk
+import random
 
 class Intefaz:
 
@@ -48,6 +49,8 @@ class Intefaz:
 
     def crear_tablero(self, frame, filas = 8, columnas = 0, tamaño_casilla = 60):
 
+        numero_bloques=100
+
         # Crear dimensiones del tablero
         for fila in range(filas):
             newlist = []
@@ -57,6 +60,13 @@ class Intefaz:
                     casillita=0
                 newlist.append(casillita)
             self.laberinto.append(newlist)
+
+        # Añadir bloques
+        lista_filas = [random.randint(1, filas-1) for _ in range(numero_bloques)]
+        lista_columnas = [random.randint(1, filas-1) for _ in range(numero_bloques)]
+
+        for index in range(numero_bloques):
+            self.laberinto[lista_filas[index]][lista_columnas[index]]= 0
 
         # Crear el lienzo para dibujar el tablero
         canvas = tk.Canvas(frame, width=columnas * tamaño_casilla, height=filas * tamaño_casilla)

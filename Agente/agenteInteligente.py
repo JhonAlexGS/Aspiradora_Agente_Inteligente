@@ -29,7 +29,7 @@ class Aspiradora():
         # print(self.energia_label)
         current_energi=self.total_energia+(self.energia)
         # dibujar=current_energi*'🧐'
-        self.energia_label.config(text=f"Energia: {current_energi} kW")
+        self.energia_label.config(text=f"Energia: {current_energi} kWh")
         status_batery(self.frame_batery, self.tamaño_casilla, current_energi, self.total_energia)
 
         if current_energi!=0:
@@ -55,7 +55,7 @@ class Aspiradora():
                     if (self.bug[0] == self.bug[2] and 
                         self.bug[1] == self.bug[3] and 
                         self.bug[4] == self.bug[5]):
-                        re_tour = [random.randint(0, 3) for _ in range(3)]
+                        re_tour = [random.randint(0, 3) for _ in range(4)]
                         print("...Reset..")
                         self.bug = []
                     else:

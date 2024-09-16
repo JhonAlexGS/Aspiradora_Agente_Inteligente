@@ -7,7 +7,7 @@ class suciedad():
         self.list_suciedad = []
 
         # Generando la cantidad de basuras
-        a, b = 1, 5
+        a, b = 1, 200
         numero_aleatorio = int(np.random.uniform(a, b))
         
         for i in range(numero_aleatorio):
