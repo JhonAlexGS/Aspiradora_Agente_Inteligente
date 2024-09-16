@@ -13,8 +13,12 @@ def neighbor_empty(casilla, target=None):
     return position_none
 
 
-def status_batery(frame, tamaño_casilla):
-    for i in range(int(tamaño_casilla*1.68)):
-        label = tk.Label(frame, bg="green", width=0)
+def status_batery(frame_batery, tamaño_casilla,current_energi,total_energia):
+    total_casillas=10
+    porcentaje_bateria=(total_casillas*current_energi)/total_energia
+    for i in range(total_casillas):
+        background="red"
+        if i < porcentaje_bateria:
+            background="green"
+        label = tk.Label(frame_batery, bg=background, width=4)
         label.grid(row=0, column=i, padx=0, pady=1)
-    return frame

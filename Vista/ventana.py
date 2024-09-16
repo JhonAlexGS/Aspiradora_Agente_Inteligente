@@ -85,13 +85,14 @@ class Intefaz:
 
 
     def crear_energia(self, frame):
-        label = tk.Label(frame, text="Segundos: 0", font=("Arial", 16))
+        label = tk.Label(frame, text="Segundos: 0", font=("Arial", 10))
         label.pack()
         return label
 
     #Creación por defecto
     def crear_fila(self, frame, tamaño_casilla):
-        for i in range(int(tamaño_casilla*1.68)):
-            label = tk.Label(frame, bg="green", width=0)
+        total_casillas=10
+        for i in range(int(total_casillas)):
+            label = tk.Label(frame, bg="green", width=4)
             label.grid(row=0, column=i, padx=0, pady=1)
         return frame

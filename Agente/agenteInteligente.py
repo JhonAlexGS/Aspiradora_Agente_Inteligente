@@ -1,11 +1,12 @@
 from Nodo import Casilla
-from Agente.helper import neighbor_empty
+from Agente.helper import neighbor_empty, status_batery
 import numpy as np
 import random
 
 class Aspiradora():
 
-    def __init__(self, laberinto, guardar_posicion, tamaño_casilla,energia_label, posicion_origin=(1,1)) -> None:
+    def __init__(self, laberinto, guardar_posicion, tamaño_casilla,energia_label, 
+        posicion_origin=(1,1), frame_batery=None, total_energia=1000) -> None:
         
         self.start = True
         self.laberinto = laberinto
@@ -18,14 +19,18 @@ class Aspiradora():
         self.return_Origin=False
         self.energia_label=energia_label
         self.energia=0
+        self.frame_batery=frame_batery
+        self.total_energia=total_energia
 
-    def mover_aspiradora(self, canvas, text_id, lista_suciedades=None, nodoAnterior= None, re_tour=[], delay=100):
+    def mover_aspiradora(self, canvas, text_id, lista_suciedades=None, nodoAnterior= None, 
+        re_tour=[], delay=50):
 
         self.energia -= 1
         # print(self.energia_label)
-        current_energi=10+(self.energia)
+        current_energi=self.total_energia+(self.energia)
         # dibujar=current_energi*'🧐'
-        self.energia_label.config(text=f"Energia: {current_energi}")
+        self.energia_label.config(text=f"Energia: {current_energi} kW")
+        status_batery(self.frame_batery, self.tamaño_casilla, current_energi, self.total_energia)
 
         if current_energi!=0:
 

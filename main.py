@@ -20,9 +20,9 @@ if __name__ == "__main__":
     # interfaz.crear_botones(frame)
     energia_label = interfaz.crear_energia(frame)
 
-    frame_interno_1 = tk.Frame(frame, bd=15)
-    batery=interfaz.crear_fila(frame_interno_1, tamaño_casilla)
-    batery.pack()
+    frame_batery = tk.Frame(frame, bd=15)
+    interfaz.crear_fila(frame_batery, tamaño_casilla)
+    frame_batery.pack()
 
     # Crear el tablero de ajedrez
     canvas = interfaz.crear_tablero(frame, filas=n_filas, columnas=n_columas, tamaño_casilla=tamaño_casilla)
@@ -44,7 +44,8 @@ if __name__ == "__main__":
         lista_suciedades[1].append(canvas_suciedades)
 
     agenteInteligente_aspiradora = agenteInteligente.Aspiradora(laberinto=interfaz.laberinto, 
-        guardar_posicion=interfaz.guardar_posicion,tamaño_casilla=tamaño_casilla, posicion_origin=posicion_origin, energia_label=energia_label)
+        guardar_posicion=interfaz.guardar_posicion,tamaño_casilla=tamaño_casilla, posicion_origin=posicion_origin, 
+        energia_label=energia_label, frame_batery=frame_batery)
 
     # Mover el texto a través del tablero
     agenteInteligente_aspiradora.mover_aspiradora(canvas, aspiradora, lista_suciedades=lista_suciedades)
